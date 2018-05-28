@@ -6,6 +6,7 @@ import { LibraryComponent } from './library/library.component';
 import { BookComponent } from './library/books-list/book/book.component';
 import { EditModalComponent } from './library/edit-modal/edit-modal.component';
 import { BooksListComponent } from './library/books-list/books-list.component';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -13,10 +14,11 @@ import { BooksListComponent } from './library/books-list/books-list.component';
     LibraryComponent,
     BookComponent,
     EditModalComponent,
-    BooksListComponent
+    BooksListComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

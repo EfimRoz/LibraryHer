@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {Book} from './books-list/book/book.model';
+import {BookService} from './service/book.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-library',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LibraryComponent implements OnInit {
 
-  constructor() { }
+  private booksList: Book[];
 
   ngOnInit() {
+    this.getBooksList();
+  }
+  constructor( private bookService: BookService) { }
+
+  getBooksList() {
+    this.bookService.getBooksList().subscribe( (booksList: Book[]) => {
+      this.booksList = booksList;
+      console.log('managed to get booksList');
+    });
   }
 
 }
