@@ -1,4 +1,8 @@
+<header>
+  <h1 class = "bg-danger text-primary">Your book library</h1>
+</header>
 <section>
-  <app-books-list></app-books-list>
-  <button>Add New Book</button>
+  <app-books-list
+    [booksList]="booksList"
+  ></app-books-list>
 </section>
