@@ -12,3 +12,20 @@
   display: flex;
   justify-content: center;
 }
+input.ng-invalid.ng-touched {
+  border-color: red;
+  animation: animationFrames linear 500ms;
+  animation-iteration-count: 3;
+  transform-origin: 50% 50%;
+}
+@keyframes animationFrames{
+  0% {
+    border-color: rgba(255, 0, 0 ,1);    /*opacity:1;*/
+  }
+  50% {
+    border-color: rgba(255, 0, 0 ,0);
+  }
+  100% {
+    border-color: rgba(255, 0, 0 ,1);
+  }
+}

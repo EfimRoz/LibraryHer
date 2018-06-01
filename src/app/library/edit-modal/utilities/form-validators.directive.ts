@@ -5,18 +5,17 @@ import {AbstractControl, FormControl, NG_VALIDATORS, ValidationErrors, Validator
   selector: '[appDateValidator]',
   providers: [{provide: NG_VALIDATORS, useExisting: DateValidatorDirective, multi: true}],
 })
-export class DateValidatorDirective implements Validator{
+export class DateValidatorDirective implements Validator {
 
   constructor() { }
 
   validate(control: AbstractControl): ValidationErrors {
       const date = new Date(control.value);
       console.log('the date obj: ', date, ' the value: ', control.value);
-      let isValid = false;
-      if (isNaN(date.getTime()))
+      if (isNaN(date.getTime())){
         return {'invalidDate': {value: control.value}};
-      else
-        isValid = true;
-      return isValid ? null : {'invalidDate': {value: control.value}};
+      } else {
+        return null;
+      }
   }
 }

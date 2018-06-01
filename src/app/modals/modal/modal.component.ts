@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {BsModalService} from 'ngx-bootstrap';
 import {Subject, Subscription} from 'rxjs';
 import {ControllerAction} from '../../library/edit-modal/utilities/controller.service';
@@ -7,7 +7,7 @@ import {ControllerAction} from '../../library/edit-modal/utilities/controller.se
   selector: 'app-modal',
   templateUrl: './modal.component.html',
 })
-export abstract class ModalComponent implements AfterViewInit {
+export abstract class ModalComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('modal') modalRef: TemplateRef<ModalComponent>;
   @Output() afterViewInit = new EventEmitter <Subject<ControllerAction>>();
@@ -16,14 +16,18 @@ export abstract class ModalComponent implements AfterViewInit {
   private modalPointer: any;
   protected modalService: BsModalService;
 
-  protected constructor( recivedModalService: BsModalService ) {
-    this.modalService = recivedModalService;
+  protected constructor( receivedModalService: BsModalService ) {
+    this.modalService = receivedModalService;
   }
 
   ngAfterViewInit() {
     const controller = this.sendControllerSub();
     this.subscribeUpdates(controller);
   }
+  ngOnDestroy() {
+    this.unsubscribeUpdates();
+  }
+
   protected sendControllerSub(): Subject<ControllerAction> {
     const controller: Subject<ControllerAction> = new Subject<ControllerAction>();
     this.afterViewInit.emit(controller);
@@ -34,6 +38,10 @@ export abstract class ModalComponent implements AfterViewInit {
       this.controllerInitAction(action);
     },
       err => console.error('An error occurred while receiving controller instructions'));
+  }
+
+  protected unsubscribeUpdates(): void {
+    this.controllerSub.unsubscribe();
   }
 
   protected controllerInitAction(action: ControllerAction): void {

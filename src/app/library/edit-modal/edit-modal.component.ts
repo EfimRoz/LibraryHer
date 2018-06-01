@@ -1,16 +1,16 @@
 import {
   AfterViewInit,
-  Component,
+  Component, ElementRef,
   OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {ControllerAction, ControllerService} from './utilities/controller.service';
-import {Subscription} from 'rxjs';
-import {BsModalService} from 'ngx-bootstrap';
+import {BsModalService, TooltipDirective} from 'ngx-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DateValidatorDirective} from './utilities/form-validators.directive';
+import {ModalComponent} from '../../modals/modal/modal.component';
 
 @Component({
   selector: 'app-edit-modal',
@@ -18,26 +18,22 @@ import {DateValidatorDirective} from './utilities/form-validators.directive';
   styleUrls: ['./edit-modal.component.css'],
   providers: [DateValidatorDirective],
 })
-export class EditModalComponent implements OnInit, AfterViewInit, OnDestroy {
+export class EditModalComponent extends ModalComponent implements OnInit, OnDestroy {
 
-  @ViewChild('modal') modalRef: TemplateRef<EditModalComponent>;
-  private controllerSub: Subscription;
-  private modalPointer: any;
+  // @ViewChild('modal') modalRef: TemplateRef<EditModalComponent>;
   private bookForm: FormGroup;
-
+  toolTipMessage = "Bad format";
   constructor( private controllerService: ControllerService,
-               private modalService: BsModalService,
+               protected modalService: BsModalService,
                private dateValidatorDirective: DateValidatorDirective,
                private formBuilder: FormBuilder) {
+    super(modalService);
     this.buildBookForm();
   }
 
   ngOnInit() {
-    this.subscribeUpdates();
   }
-  ngAfterViewInit() {
 
-  }
   ngOnDestroy() {
 
   }
@@ -50,24 +46,14 @@ export class EditModalComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private subscribeUpdates(): void {
-    this.controllerSub = this.controllerService.modalController.subscribe(
-      (action: ControllerAction) => this.controllerInitAction(action),
-      (err) => console.error('Failure in controller subject:', err));
+  save(): void {
+    console.log('this.bookForm.', this.bookForm.controls.publishYear);
+    // if(this.bookForm.controls.publishYear.validator)
   }
-
-  private controllerInitAction(action: ControllerAction): void {
-    switch (action) {
-      case ControllerAction.Display:
-        console.log('opening:', this.modalRef);
-        this.modalPointer = this.modalService.show(this.modalRef);
-        break;
-      case ControllerAction.Hide:
-        this.modalPointer.hide();
-        break;
-    }
+  inputBlur(toolTip: any, elInput: Element): void {
+    const formControlName  = elInput.getAttribute("formcontrolname");
+    ( this.bookForm.controls[formControlName].invalid) ? toolTip.show() : toolTip.hide();
   }
-
   private hideModal(): void {
     this.controllerService.initAction(ControllerAction.Hide);
   }
