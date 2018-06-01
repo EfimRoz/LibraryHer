@@ -1,14 +1,14 @@
 <ng-template #modal let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">Modal title</h4>
-    <button type="button" class="close" aria-label="Close" (click)="hideModal()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p>One fine body&hellip;</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-light" (click)="hideModal()">Close</button>
-  </div>
+  <form [formGroup]="bookForm">
+    <div class="modal-header modal-section">
+      <input  formControlName="bookName" type="text">
+    </div>
+    <div class="modal-body modal-section">
+      <input  formControlName="authorName" type="text">
+    </div>
+    <div class="modal-footer modal-section">
+      <input dateValidator formControlName="publishYear" type="date">
+    </div>
+    <p>{{ bookForm.value | json }} </p>
+  </form>
 </ng-template>

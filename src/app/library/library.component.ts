@@ -2,7 +2,7 @@ import {Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild} from '
 import {Book} from './books-list/book/book.model';
 import {BookService} from './service/book.service';
 import {Subscription} from 'rxjs';
-import {ControllerAction, ControllerService} from './edit-modal/controller.service';
+import {ControllerAction, ControllerService} from './edit-modal/utilities/controller.service';
 
 @Component({
   selector: 'app-library',

@@ -8,3 +8,7 @@
 .light-blue-backdrop {
   background-color: #5cb3fd;
 }
+.modal-section {
+  display: flex;
+  justify-content: center;
+}

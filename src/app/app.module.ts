@@ -8,6 +8,9 @@ import { EditModalComponent } from './library/edit-modal/edit-modal.component';
 import { BooksListComponent } from './library/books-list/books-list.component';
 import {HttpClientModule} from '@angular/common/http';
 import {ModalModule, TooltipModule} from 'ngx-bootstrap';
+import {ReactiveFormsModule} from '@angular/forms';
+import { DateValidatorDirective } from './library/edit-modal/utilities/form-validators.directive';
+import { ErrorModalComponent } from './error-modal/error-modal.component';
 
 @NgModule({
   declarations: [
@@ -16,10 +19,13 @@ import {ModalModule, TooltipModule} from 'ngx-bootstrap';
     BookComponentDirective,
     EditModalComponent,
     BooksListComponent,
+    DateValidatorDirective,
+    ErrorModalComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    ReactiveFormsModule,
     TooltipModule.forRoot(),
     ModalModule.forRoot()
   ],
