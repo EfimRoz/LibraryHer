@@ -10,7 +10,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {ModalModule, TooltipModule} from 'ngx-bootstrap';
 import {ReactiveFormsModule} from '@angular/forms';
 import { DateValidatorDirective } from './library/edit-modal/utilities/form-validators.directive';
-import { ErrorModalComponent } from './error-modal/error-modal.component';
+import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
+import { ModalComponent } from './modals/modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ErrorModalComponent } from './error-modal/error-modal.component';
     BooksListComponent,
     DateValidatorDirective,
     ErrorModalComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,

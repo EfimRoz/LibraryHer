@@ -1,0 +1,11 @@
+<ng-template #modal let-c="close" let-d="dismiss">
+  <div class="modal-header modal-section">
+    <p>{{modalTitle}}</p>
+  </div>
+  <div class="modal-body modal-section">
+    <p>{{modalContent}}</p>
+  </div>
+  <div class="modal-footer modal-section">
+    <ng-content></ng-content>
+  </div>
+</ng-template>

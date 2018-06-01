@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Book} from './books-list/book/book.model';
 import {BookService} from './service/book.service';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {ControllerAction, ControllerService} from './edit-modal/utilities/controller.service';
 
 @Component({
@@ -13,7 +13,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   private booksList: Book[];
   private updatesSubscription: Subscription;
-  @ViewChild('modal') modalRef: any;
+  private modalController: Subject<ControllerAction>;
+  // @ViewChild('modal') modalRef: any;
 
   ngOnInit() {
     this.getBooksList();
@@ -37,13 +38,21 @@ export class LibraryComponent implements OnInit, OnDestroy {
     // this.tempTest.result.then( val => console.log('we won', val),
     //                   err => console.error('Failed to add a new book:', err));
 
-    this.controllerService.initAction(ControllerAction.Display);
+    // this.controllerService.initAction(ControllerAction.Display);
+    this.initControllerAction(ControllerAction.Display);
+
   }
 
   updatesSubscribe(): void {
     this.updatesSubscription = this.bookService.booksListUpdate.subscribe( booksList => {
       this.booksList = booksList;
     });
+  }
+  storeController(modalController: Subject<ControllerAction>): void {
+    this.modalController = modalController;
+  }
+  initControllerAction(controllerAction: ControllerAction): void {
+    this.modalController.next(controllerAction);
   }
   updatesUnsubscribe(): void {
     this.updatesSubscription.unsubscribe();
