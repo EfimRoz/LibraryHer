@@ -11,7 +11,6 @@ import {ModalModule, TooltipModule} from 'ngx-bootstrap';
 import {ReactiveFormsModule} from '@angular/forms';
 import { DateValidatorDirective } from './library/edit-modal/utilities/form-validators.directive';
 import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
-import { ModalComponent } from './modals/modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -21,8 +20,7 @@ import { ModalComponent } from './modals/modal/modal.component';
     EditModalComponent,
     BooksListComponent,
     DateValidatorDirective,
-    ErrorModalComponent,
-    ModalComponent
+    ErrorModalComponent
   ],
   imports: [
     BrowserModule,
