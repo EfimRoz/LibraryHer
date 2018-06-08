@@ -23,8 +23,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.updatesUnsubscribe();
   }
-  constructor( private bookService: BookService,
-               private controllerService: ControllerService) {}
+  constructor( private bookService: BookService ) {}
 
   getBooksList(): void {
     this.bookService.requestBooksList().subscribe( (booksList: Book[]) => {
@@ -51,6 +50,13 @@ export class LibraryComponent implements OnInit, OnDestroy {
   storeController(modalController: Subject<ControllerAction>): void {
     this.modalController = modalController;
   }
+
+  onModalInputReceived(book: Book): void {
+    console.log('saving new book:', book);
+    this.bookService.addNewBook(book);
+    this.initControllerAction(ControllerAction.Hide);
+  }
+
   initControllerAction(controllerAction: ControllerAction): void {
     this.modalController.next(controllerAction);
   }

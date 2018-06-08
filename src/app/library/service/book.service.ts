@@ -39,4 +39,15 @@ export class BookService {
       console.error('Failed to extract books list with the error:', err);
     }));
   }
+
+  public addNewBook( newBook: Book ): void {
+    const copyNewBook = newBook.clone();
+    this.realBooksList.push(copyNewBook);
+    this.updateBookList();
+  }
+
+  private updateBookList(): void {
+    const copyBookList = this. copyBooksList( this.realBooksList );
+    this.booksListUpdate.next(copyBookList);
+  }
 }

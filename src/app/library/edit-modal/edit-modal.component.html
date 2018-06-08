@@ -1,10 +1,14 @@
 <ng-template #modal let-c="close" let-d="dismiss">
-  <form [formGroup]="bookForm">
+  <form
+    [formGroup]="bookForm"
+    (ngSubmit)="save(inputAuthor, inputDate, inputName)"
+  >
     <div class="modal-header modal-section">
       <h2>Edit book</h2>
     </div>
     <div class="modal-body modal-section">
       <input
+        class="form-control"
         formControlName="bookName"
         type="text"
         tooltip="No value is given"
@@ -15,6 +19,7 @@
         (blur)="inputBlur(popName, inputName)"
       >
       <input
+        class="form-control"
         formControlName="authorName"
         type="text"
         tooltip="No value is given"
@@ -26,21 +31,22 @@
 
       >
       <input
+        class="form-control"
         dateValidator
         formControlName="publishYear"
         type="date"
         tooltip="Bad date, make sure all fields are numeric"
         placement="top"
         triggers=""
-        #inputYear
+        #inputDate
         #popYear="bs-tooltip"
-        (blur)="inputBlur(popYear, inputYear)"
+        (blur)="inputBlur(popYear, inputDate)"
       >
 
     </div>
     <div class="modal-footer modal-section">
-      <button (click)="save()">Save</button>
-      <button (click)="cancel()">Cancel</button>
+      <button type="submit" class="btn btn-success">Save</button>
+      <button type="button" (click)="cancel()" class="btn btn-warning">Cancel</button>
     </div>
   </form>
 </ng-template>
