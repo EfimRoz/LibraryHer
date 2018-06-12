@@ -17,6 +17,7 @@
   [objToEdit]="editBook"
   (afterViewInit)="storeController($event)"
   (modalInputReceived)="onModalInputReceived($event)"
+  (onHidden)="onHidden($event)"
 
 ></app-edit-modal>
 <!--<app-error-modal (afterViewInit)="storeController($event)"></app-error-modal>-->

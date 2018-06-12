@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {BsModalService} from 'ngx-bootstrap';
+import {BsModalService, ModalDirective} from 'ngx-bootstrap';
 import {Subject, Subscription} from 'rxjs';
 import {ControllerAction} from '../../library/edit-modal/utilities/controller.service';
 
@@ -9,7 +9,11 @@ import {ControllerAction} from '../../library/edit-modal/utilities/controller.se
 })
 export abstract class ModalComponent implements AfterViewInit, OnDestroy {
 
-  @ViewChild('modal') modalRef: TemplateRef<ModalComponent>;
+  private modalChangeSubscription: Subscription;
+
+  @ViewChild('modalRef') protected modalRef: TemplateRef<ModalComponent>;
+  @ViewChild(ModalDirective) modal: ModalDirective;
+  // @ViewChild('modal') protected modalRef: TemplateRef<ModalComponent>;
   @Output() afterViewInit = new EventEmitter <Subject<ControllerAction>>();
 
   private controllerSub: Subscription;
@@ -35,19 +39,26 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
   }
   protected subscribeUpdates(controller: Subject<ControllerAction>): void {
     this.controllerSub = controller.subscribe( (action: ControllerAction) => {
+      console.log('action to init:', action);
       this.controllerInitAction(action);
     },
       err => console.error('An error occurred while receiving controller instructions'));
+
+
+    this.modalChangeSubscription = this.modalService.onHidden.subscribe( reason => this.onHidden(reason));
   }
 
   protected unsubscribeUpdates(): void {
     this.controllerSub.unsubscribe();
+    this.modalChangeSubscription.unsubscribe();
   }
 
   protected controllerInitAction(action: ControllerAction): void {
     switch (action) {
       case ControllerAction.Display:
         this.modalPointer = this.modalService.show(this.modalRef);
+        console.log('this.modelRef :', this.modalRef);
+        // this.modalRef.show();
         this.onModalDisplay();
         break;
       case ControllerAction.Hide:
@@ -56,6 +67,8 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  protected onHidden(reason: any): void {
+  }
   protected onModalDisplay(): void {
 
   }

@@ -3,6 +3,7 @@ import {Book} from './books-list/book/book.model';
 import {BookService} from './service/book.service';
 import {Subject, Subscription} from 'rxjs';
 import {ControllerAction, ControllerService} from './edit-modal/utilities/controller.service';
+import {ModalDirective} from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-library',
@@ -40,8 +41,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.initControllerAction(ControllerAction.Display);
   }
   initNewBook(): void {
-    this.inputDate = new Date();
-    this.editBook = new Book('', this.inputDate, '');
+    this.editBook = new Book(null, null, null);
+    console.log('new book date:2', this.editBook.date);
   }
   updatesSubscribe(): void {
     this.updatesSubscription = this.bookService.booksListUpdate.subscribe( booksList => {
@@ -60,11 +61,16 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   onBookUpdate(book: Book): void {
     console.log('book update!', book);
+
     this.editBook.copy(book);
+
     console.log('book update2', this.editBook);
+
     this.initControllerAction(ControllerAction.Display);
   }
-
+  // onHidden(event: ModalDirective): void {
+  //   console.log('YAY!!!!!!!:', event)
+  // }
   initControllerAction(controllerAction: ControllerAction): void {
     this.modalController.next(controllerAction);
   }

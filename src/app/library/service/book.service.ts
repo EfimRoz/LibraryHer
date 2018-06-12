@@ -30,7 +30,13 @@ export class BookService {
   requestBooksList(): Observable<Book[]> {
     return this.httpService.requestBooksList().pipe( map((newBooksList: Book[]) => {
       newBooksList.forEach( (book: Book) => {
-        const newBook = new Book(book.author, book.date, book.title);
+        let date: Date;
+        try {
+          date = new Date(book.date);
+        } catch (e) {
+          date = null;
+        }
+        const newBook = new Book(book.author, date, book.title);
         this.realBooksList.push(newBook);
       });
       return this.copyBooksList(this.realBooksList);

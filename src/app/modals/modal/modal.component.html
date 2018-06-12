@@ -1,4 +1,9 @@
-<ng-template #modal let-c="close" let-d="dismiss">
+<ng-template
+  bsModal
+  #modalRef
+  #modal="bs-modal"
+  let-c="close"
+  let-d="dismiss">
   <div class="modal-header modal-section">
     <p>{{modalTitle}}</p>
   </div>

@@ -1,4 +1,7 @@
-<ng-template #modal let-c="close" let-d="dismiss">
+<ng-template
+  bsModal
+  #modalRef
+  #modal="bs-modal">
   <form
     [formGroup]="bookForm"
     (ngSubmit)="save(inputAuthor, inputDate, inputName)"

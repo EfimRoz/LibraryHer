@@ -1,4 +1,10 @@
 
+export enum bookFormFields {
+  title = 'title',
+  author = 'author',
+  date = 'date',
+}
+
 export class Book {
 
   private _author: string;
@@ -6,22 +12,21 @@ export class Book {
   private _title: string;
 
   constructor(author: string, date: Date, title: string) {
+    this._date = new Date();
+
     this._author = author;
-    this._date = new Date(date);
+    this.date = date;
     this._title = title;
   }
 
   public clone(): Book {
-    const date = new Date(this.date);
-    return new Book(this.author, date, this.title);
+    return new Book(this.author, this.date, this.title);
   }
 
   public copy(book: Book): void {
     this.author = book.author;
-
-    this._date.setDate(book.date.getDate());
-    this._date.setMonth(book.date.getMonth());
-    this._date.setFullYear(book.date.getFullYear());
+    console.log('book date:', book.date, 'this date:', this.date);
+    this.date = book.date;
 
     this.title = book.title;
   }
@@ -34,11 +39,28 @@ export class Book {
   }
 
   get date(): Date {
-    return new Date(this._date);
+    return ( this._date === null ) ? null : new Date(this._date);
   }
 
   set date(value: Date) {
-    this._date = new Date(value);
+    // Changing the date parameters
+    if (value === null ) {
+      this._date = null;
+      return;
+    }
+    console.log('this date', this._date, "value.date", value);
+    const date = value.getDate();
+    const month = value.getMonth();
+    const fullYear = value.getFullYear();
+
+    if (this._date === null) {
+      this._date = new Date();
+    }
+
+    this._date.setDate(date);
+    this._date.setMonth(month);
+    this._date.setFullYear(fullYear);
+
   }
 
   get title(): string {
@@ -47,6 +69,12 @@ export class Book {
 
   set title(value: string) {
     this._title = value;
+  }
+
+  public nullifyBook(): void {
+    this.title = null;
+    this.author = null;
+    this.date = null;
   }
 
 }

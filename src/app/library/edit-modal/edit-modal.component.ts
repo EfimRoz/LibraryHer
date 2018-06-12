@@ -1,20 +1,17 @@
 import {
   Component, EventEmitter, Input,
   OnDestroy,
-  OnInit, Output, TemplateRef,
+  OnInit, Output, TemplateRef, ViewChild,
 } from '@angular/core';
 import {ControllerAction, ControllerService} from './utilities/controller.service';
-import {BsModalService, TooltipDirective} from 'ngx-bootstrap';
+import {BsModalService, ModalDirective} from 'ngx-bootstrap';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DateValidatorDirective} from './utilities/form-validators.directive';
 import {ModalComponent} from '../../modals/modal/modal.component';
-import {Book} from '../books-list/book/book.model';
+import {Book, bookFormFields} from '../books-list/book/book.model';
+import {Subscription} from 'rxjs';
 
-export enum bookFormFields {
-  title = 'title',
-  author = 'author',
-  date = 'date',
-}
+
 
 @Component({
   selector: 'app-edit-modal',
@@ -26,11 +23,13 @@ export enum bookFormFields {
 
 export class EditModalComponent extends ModalComponent implements OnInit, OnDestroy {
 
-  private bookForm: FormGroup;
 
+  // @ViewChild(ModalDirective) protected modalRef: ModalDirective;
+  // @ViewChild('modal') protected modalRef: TemplateRef<ModalComponent>;
   @Input() objToEdit: Book;
   @Output() modalInputReceived = new EventEmitter<Book>();
 
+  private bookForm: FormGroup;
   constructor( private controllerService: ControllerService,
                protected modalService: BsModalService,
                private dateValidatorDirective: DateValidatorDirective,
@@ -58,11 +57,12 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
   protected onModalDisplay(): void {
     for (const controlName of Object.keys(bookFormFields)) {
       // console.log('ControlName:', controlName, this.objToEdit);
-      if ( controlName !== bookFormFields.date ) {
-        this.bookForm.controls[controlName].setValue(this.objToEdit[controlName]);
-      } else {
+      if ( controlName === bookFormFields.date ) {
         const dateString = this.formatDate(this.objToEdit.date);
+        console.log('setting the date value:', dateString);
         this.bookForm.controls['date'].setValue(dateString);
+      } else {
+        this.bookForm.controls[controlName].setValue(this.objToEdit[controlName]);
       }
       // console.log('Control:', this.bookForm.controls[controlName], 'new value:', this.objToEdit[controlName]);
     }
@@ -98,16 +98,22 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
       return;
     }
 
+    const strDate: string = this.bookForm.controls[bookFormFields.date].value;
+
     const authorName = this.bookForm.controls[bookFormFields.author].value;
-    const publishYear = this.bookForm.controls[bookFormFields.date].value;
+    const publishYear = new Date( strDate );
     const bookName = this.bookForm.controls[bookFormFields.title].value;
+
+
 
     const newBook = new Book(authorName, publishYear, bookName);
 
     this.modalInputReceived.emit(newBook);
-    console.log('HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!*@#*(@(#*!@#!@#(*!@#@#!#@#');
-    this.nullifyFormValue();
+    // this.nullifyFormValue();
 
+  }
+  protected onHidden(reason: any): void {
+    this.nullifyFormValue();
   }
 
   nullifyFormValue(): void {
@@ -115,9 +121,8 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
     // (his own fields only, no inherited keys)
     for ( const bookFormField of Object.keys(bookFormFields)) {
       console.log('nullifiying', bookFormField);
-      this.objToEdit[bookFormField] = '';
+      this.objToEdit[bookFormField] = null;
       this.bookForm.controls[bookFormField].reset();
-
     }
   }
 
@@ -131,7 +136,6 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
   }
   cancel(): void {
     super.controllerInitAction( ControllerAction.Hide);
-    this.nullifyFormValue();
   }
   inputBlur(toolTip: any, elInput: Element): void {
     const formControlName  = elInput.getAttribute("formcontrolname");
