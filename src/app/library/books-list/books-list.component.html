@@ -7,11 +7,14 @@
       *ngFor="let book of booksList; let odd = odd; let idx = index"
       [class.odd]="odd">
       <td>{{idx}}</td>
-      <td>{{book.author}}</td>
-      <td>{{book.title}}</td>
+      <td>{{book.author | titleFormat}}</td>
+      <td>{{book.title | titleFormat}}</td>
       <td>{{book.date | date: 'dd/MM/yyyy' }}</td>
       <td><button class = "btn btn-info"> Read </button>
-        <button class = "btn btn-warning"> Update </button>
+        <button
+          class="btn btn-warning"
+          (click)="updateBook(book)"
+        > Update </button>
         <button class = "btn btn-danger"> Delete </button>
       </td>
     </tr>

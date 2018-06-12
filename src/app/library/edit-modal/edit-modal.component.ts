@@ -1,5 +1,5 @@
 import {
-  Component, EventEmitter,
+  Component, EventEmitter, Input,
   OnDestroy,
   OnInit, Output, TemplateRef,
 } from '@angular/core';
@@ -11,9 +11,9 @@ import {ModalComponent} from '../../modals/modal/modal.component';
 import {Book} from '../books-list/book/book.model';
 
 export enum bookFormFields {
-  bookName = 'bookName',
-  authorName = 'authorName',
-  publishYear = 'publishYear',
+  title = 'title',
+  author = 'author',
+  date = 'date',
 }
 
 @Component({
@@ -28,6 +28,7 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
 
   private bookForm: FormGroup;
 
+  @Input() objToEdit: Book;
   @Output() modalInputReceived = new EventEmitter<Book>();
 
   constructor( private controllerService: ControllerService,
@@ -47,33 +48,64 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
 
   private buildBookForm(): void {
     this.bookForm = this.formBuilder.group({
-      bookName: ['', Validators.required ],
-      authorName: ['', Validators.required],
-      publishYear: ['', [Validators.required, this.dateValidatorDirective.validate]]
+      title: ['', Validators.required ],
+      author: ['', Validators.required],
+      date: ['', [Validators.required, this.dateValidatorDirective.validate]]
     });
 
   }
 
-  private onFormStatusChange(control: AbstractControl) {
-
+  protected onModalDisplay(): void {
+    for (const controlName of Object.keys(bookFormFields)) {
+      // console.log('ControlName:', controlName, this.objToEdit);
+      if ( controlName !== bookFormFields.date ) {
+        this.bookForm.controls[controlName].setValue(this.objToEdit[controlName]);
+      } else {
+        const dateString = this.formatDate(this.objToEdit.date);
+        this.bookForm.controls['date'].setValue(dateString);
+      }
+      // console.log('Control:', this.bookForm.controls[controlName], 'new value:', this.objToEdit[controlName]);
+    }
   }
+
+  private formatDate(date: Date): string {
+    let year: string;
+    let month: string;
+    let dayOfMonth: string;
+    if (date) {
+      year = `${this.objToEdit.date.getFullYear()}`;
+      month = `${this.objToEdit.date.getMonth() + 1}`;
+      dayOfMonth = `${this.objToEdit.date.getDate()}`;
+      if ( month.length < 2 ) {
+        month = `0${month}`;
+      }
+      if ( dayOfMonth.length < 2 ) {
+        dayOfMonth = `0${dayOfMonth}`;
+      }
+    }
+    if ( year && month && year ) {
+      const dateString = `${year}-${month}-${dayOfMonth}`;
+      return dateString;
+    }
+    return '';
+    }
 
   save(author: HTMLElement, date: HTMLElement, title: HTMLElement): void {
 
     if (this.bookForm.invalid) {
       // Invalid input, retry!
-      console.error('this.bookForm.', this.bookForm);
       this.touchFormInputs(author, date, title);
       return;
     }
 
-    const authorName = this.bookForm.controls[bookFormFields.authorName].value;
-    const publishYear = this.bookForm.controls[bookFormFields.publishYear].value;
-    const bookName = this.bookForm.controls[bookFormFields.bookName].value;
+    const authorName = this.bookForm.controls[bookFormFields.author].value;
+    const publishYear = this.bookForm.controls[bookFormFields.date].value;
+    const bookName = this.bookForm.controls[bookFormFields.title].value;
 
     const newBook = new Book(authorName, publishYear, bookName);
 
     this.modalInputReceived.emit(newBook);
+    console.log('HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!*@#*(@(#*!@#!@#(*!@#@#!#@#');
     this.nullifyFormValue();
 
   }
@@ -82,9 +114,10 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
     // Itteranting over all the keys of bookFormFields
     // (his own fields only, no inherited keys)
     for ( const bookFormField of Object.keys(bookFormFields)) {
-      console.log('bookformFiled:', bookFormField, 'contolr:', this.bookForm.controls[bookFormField]);
-      // this.bookForm.controls[bookFormField].setValue('');
+      console.log('nullifiying', bookFormField);
+      this.objToEdit[bookFormField] = '';
       this.bookForm.controls[bookFormField].reset();
+
     }
   }
 

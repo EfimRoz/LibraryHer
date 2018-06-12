@@ -16,6 +16,15 @@ export class Book {
     return new Book(this.author, date, this.title);
   }
 
+  public copy(book: Book): void {
+    this.author = book.author;
+
+    this._date.setDate(book.date.getDate());
+    this._date.setMonth(book.date.getMonth());
+    this._date.setFullYear(book.date.getFullYear());
+
+    this.title = book.title;
+  }
   get author(): string {
     return this._author;
   }

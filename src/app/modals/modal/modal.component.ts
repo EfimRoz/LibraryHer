@@ -48,11 +48,16 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
     switch (action) {
       case ControllerAction.Display:
         this.modalPointer = this.modalService.show(this.modalRef);
+        this.onModalDisplay();
         break;
       case ControllerAction.Hide:
         this.modalPointer.hide();
         break;
     }
+  }
+
+  protected onModalDisplay(): void {
+
   }
 
 

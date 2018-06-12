@@ -3,17 +3,20 @@
 </header>
 <section>
   <button
-    (click)="addNewBook(content)"
+    (click)="addNewBook()"
     class = "btn btn-link"
   >
     Add New Book
   </button>
   <app-books-list
     [booksList]="booksList"
+    (bookUpdated)="onBookUpdate($event)"
   ></app-books-list>
 </section>
 <app-edit-modal
+  [objToEdit]="editBook"
   (afterViewInit)="storeController($event)"
   (modalInputReceived)="onModalInputReceived($event)"
+
 ></app-edit-modal>
 <!--<app-error-modal (afterViewInit)="storeController($event)"></app-error-modal>-->

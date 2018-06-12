@@ -1,6 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Book} from './book/book.model';
-import {BookComponentDirective} from './book/book-component.directive';
 
 @Component({
   selector: 'app-books-list',
@@ -8,11 +7,17 @@ import {BookComponentDirective} from './book/book-component.directive';
   styleUrls: ['./books-list.component.css']
 })
 export class BooksListComponent implements OnInit {
+
   @Input() booksList: Book[];
+  @Output() bookUpdated = new EventEmitter<Book>();
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  updateBook(book: Book): void {
+    this.bookUpdated.emit(book);
   }
 
 }

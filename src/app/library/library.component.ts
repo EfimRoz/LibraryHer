@@ -14,6 +14,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
   private booksList: Book[];
   private updatesSubscription: Subscription;
   private modalController: Subject<ControllerAction>;
+  editBook: Book;
+  private inputDate: Date;
   // @ViewChild('modal') modalRef: any;
 
   ngOnInit() {
@@ -23,7 +25,9 @@ export class LibraryComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.updatesUnsubscribe();
   }
-  constructor( private bookService: BookService ) {}
+  constructor( private bookService: BookService ) {
+    this.initNewBook();
+  }
 
   getBooksList(): void {
     this.bookService.requestBooksList().subscribe( (booksList: Book[]) => {
@@ -31,17 +35,14 @@ export class LibraryComponent implements OnInit, OnDestroy {
       console.log('managed to get booksList');
     });
   }
+
   addNewBook(): void {
-    console.log("before open...")
-    // this.tempTest = this.modalService.open(EditModalComponent);
-    // this.tempTest.result.then( val => console.log('we won', val),
-    //                   err => console.error('Failed to add a new book:', err));
-
-    // this.controllerService.initAction(ControllerAction.Display);
     this.initControllerAction(ControllerAction.Display);
-
   }
-
+  initNewBook(): void {
+    this.inputDate = new Date();
+    this.editBook = new Book('', this.inputDate, '');
+  }
   updatesSubscribe(): void {
     this.updatesSubscription = this.bookService.booksListUpdate.subscribe( booksList => {
       this.booksList = booksList;
@@ -55,6 +56,13 @@ export class LibraryComponent implements OnInit, OnDestroy {
     console.log('saving new book:', book);
     this.bookService.addNewBook(book);
     this.initControllerAction(ControllerAction.Hide);
+  }
+
+  onBookUpdate(book: Book): void {
+    console.log('book update!', book);
+    this.editBook.copy(book);
+    console.log('book update2', this.editBook);
+    this.initControllerAction(ControllerAction.Display);
   }
 
   initControllerAction(controllerAction: ControllerAction): void {
