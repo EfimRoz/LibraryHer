@@ -51,7 +51,7 @@ export class LibraryComponent extends ModalUserComponent implements OnInit, OnDe
 
   onModalInputReceived(book: Book): void {
     console.log('saving new book:', book);
-    this.bookService.addNewBook(book);
+    this.bookService.addNewBook(book, this.editBook);
     this.initControllerAction(ControllerAction.Hide);
   }
 
@@ -76,11 +76,8 @@ export class LibraryComponent extends ModalUserComponent implements OnInit, OnDe
         break;
       case ConfirmStatus.Fail:
         break;
-
-      case ConfirmStatus.Cancel:
-        break;
     }
-    this.initNewBook();
+    // this.initNewBook();
   }
   // onHidden(event: ModalDirective): void {
   //   console.log('YAY!!!!!!!:', event)

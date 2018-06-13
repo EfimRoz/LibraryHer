@@ -4,7 +4,6 @@ import {BsModalService} from 'ngx-bootstrap';
 import {ControllerAction} from '../modal-user/modal-user.component';
 
 export enum ConfirmStatus {
-  Cancel,
   Fail,
   Success
 }
@@ -26,16 +25,15 @@ export class ConfirmModalComponent extends ModalComponent implements OnInit {
   }
 
   confirm(): void {
-    console.log('confirmed');
+
     this.emitConfirmStatus( ConfirmStatus.Success );
   }
 
   decline(): void {
+
     this.emitConfirmStatus( ConfirmStatus.Fail );
   }
-  onModalHidden(): void {
-    this.emitConfirmStatus( ConfirmStatus.Fail );
-  }
+
   private emitConfirmStatus( confirmStatus: ConfirmStatus): void {
     this.confirmStatus.emit(confirmStatus);
     super.controllerInitAction( ControllerAction.Hide);

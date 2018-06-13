@@ -46,7 +46,8 @@ export class BookService {
     }));
   }
 
-  public addNewBook( newBook: Book ): void {
+  public addNewBook( newBook: Book, oldBook: Book ): void {
+    console.log('newBook:', newBook, 'oldBook:', oldBook);
     const copyNewBook: Book = newBook.clone();
     this.realBooksList.push(copyNewBook);
     this.updateBookList();
