@@ -47,20 +47,43 @@ export class BookService {
   }
 
   public addNewBook( newBook: Book, oldBook: Book ): void {
+
     console.log('newBook:', newBook, 'oldBook:', oldBook);
     const copyNewBook: Book = newBook.clone();
-    this.realBooksList.push(copyNewBook);
+    if (oldBook.title === null) {
+      // If its a new book
+      this.addBook(copyNewBook);
+    } else {
+      this.replaceBook(oldBook, newBook);
+    }
     this.updateBookList();
   }
-
+  public titleExists(title: string): boolean {
+    const sameTitleIndex =  this.realBooksList.findIndex( book => book.title === title);
+    return (sameTitleIndex !== -1);
+  }
+  private addBook( bookToAdd: Book): void {
+    if (this.titleExists(bookToAdd.title)) {
+      throw new Error('The title already exists!');
+    } else {
+      this.realBooksList.push(bookToAdd);
+    }
+  }
   public deleteBook( bookToDel: Book ): void {
+
+    this.removeBook(bookToDel);
+
+    this.updateBookList();
+  }
+  private removeBook( bookToDel): void {
     const delIndex = this.realBooksList.findIndex( book => book.title === bookToDel.title);
     this.realBooksList.splice(delIndex, 1);
-    console.log('deleting the book:', this.realBooksList);
-
-    this.updateBookList();
   }
-
+  private replaceBook( bookToReplace: Book, newBook: Book): void {
+    const copyNewBook: Book = newBook.clone();
+    const delIndex = this.realBooksList.findIndex( book => book.title === bookToReplace.title);
+    this.realBooksList.splice(delIndex, 1, copyNewBook);
+  }
   private updateBookList(): void {
     const copyBookList = this. copyBooksList( this.realBooksList );
     this.booksListUpdate.next(copyBookList);

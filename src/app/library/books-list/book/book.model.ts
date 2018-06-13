@@ -1,9 +1,4 @@
 
-export enum bookFormFields {
-  title = 'title',
-  author = 'author',
-  date = 'date',
-}
 
 export class Book {
 
@@ -25,7 +20,7 @@ export class Book {
 
   public copy(book: Book): void {
     this.author = book.author;
-    console.log('book date:', book.date, 'this date:', this.date);
+    // console.log('book date:', book.date, 'this date:', this.date);
     this.date = book.date;
 
     this.title = book.title;
@@ -48,7 +43,7 @@ export class Book {
       this._date = null;
       return;
     }
-    console.log('this date', this._date, "value.date", value);
+    // console.log('this date', this._date, "value.date", value);
     const date = value.getDate();
     const month = value.getMonth();
     const fullYear = value.getFullYear();

@@ -14,7 +14,7 @@ export class LibraryComponent extends ModalUserComponent implements OnInit, OnDe
 
   private booksList: Book[];
   private updatesSubscription: Subscription;
-  editBook: Book;
+  editBook: Book = new Book(null, null, null);
   private inputDate: Date;
   // @ViewChild('modal') modalRef: any;
 
@@ -33,7 +33,7 @@ export class LibraryComponent extends ModalUserComponent implements OnInit, OnDe
   getBooksList(): void {
     this.bookService.requestBooksList().subscribe( (booksList: Book[]) => {
       this.booksList = booksList;
-      console.log('managed to get booksList');
+      // console.log('managed to get booksList');
     });
   }
 
@@ -50,17 +50,23 @@ export class LibraryComponent extends ModalUserComponent implements OnInit, OnDe
   }
 
   onModalInputReceived(book: Book): void {
-    console.log('saving new book:', book);
-    this.bookService.addNewBook(book, this.editBook);
-    this.initControllerAction(ControllerAction.Hide);
+    // Where you receive answer from the edit modal
+    try {
+      this.bookService.addNewBook(book, this.editBook);
+      this.initControllerAction(ControllerAction.Hide);
+    } catch (e) {
+      // Bad name
+      this.initControllerAction(ControllerAction.BadTitleError);
+    }
+
   }
 
   onBookUpdate(book: Book): void {
-    console.log('book update!', book);
+    // console.log('book update!', book);
 
     this.editBook.copy(book);
 
-    console.log('book update2', this.editBook);
+    // console.log('book update2', this.editBook);
 
     this.initControllerAction(ControllerAction.Display);
   }

@@ -10,7 +10,7 @@ export class TitleFormatPipe extends TitleCasePipe implements PipeTransform {
     const formatedCase = super.transform(value);
     const re: RegExp = new RegExp('([A-Za-z0-9,.][\\s.,!]?)+');
     const formatedValue = formatedCase.match(re);
-    console.log('formated pipe value:', formatedValue);
+    // console.log('formated pipe value:', formatedValue);
     return formatedValue[0];
   }
 }

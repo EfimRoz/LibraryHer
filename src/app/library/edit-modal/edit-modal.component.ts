@@ -8,17 +8,23 @@ import {BsModalService, ModalDirective} from 'ngx-bootstrap';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DateValidatorDirective} from './utilities/form-validators.directive';
 import {ModalComponent} from '../../modals/modal/modal.component';
-import {Book, bookFormFields} from '../books-list/book/book.model';
+import {Book} from '../books-list/book/book.model';
 import {Subscription} from 'rxjs';
 import {ControllerAction} from '../../modals/modal-user/modal-user.component';
+import {TitleValidatorDirective} from './utilities/title-validator.directive';
 
+export enum BookFormFields {
+  title = 'title',
+  author = 'author',
+  date = 'date',
+}
 
 
 @Component({
   selector: 'app-edit-modal',
   templateUrl: './edit-modal.component.html',
   styleUrls: ['./edit-modal.component.css'],
-  providers: [DateValidatorDirective],
+  providers: [DateValidatorDirective, TitleValidatorDirective],
 })
 
 
@@ -32,15 +38,22 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
   @Output() nullifyObjToEdit = new EventEmitter();
 
   private bookForm: FormGroup;
+
+  // private titleToolTip: string;
+  private titleFieldName: string;
+
+
   constructor( private controllerService: ControllerService,
                protected modalService: BsModalService,
                private dateValidatorDirective: DateValidatorDirective,
+               private titleUniqueValidator: TitleValidatorDirective,
                private formBuilder: FormBuilder) {
     super(modalService);
-    this.buildBookForm();
+    this.titleFieldName = BookFormFields.title;
   }
 
   ngOnInit() {
+    this.buildBookForm();
   }
 
   ngOnDestroy() {
@@ -49,7 +62,7 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
 
   private buildBookForm(): void {
     this.bookForm = this.formBuilder.group({
-      title: ['', Validators.required ],
+      title: ['', [Validators.required, this.titleUniqueValidator.uniqueValidator(this.objToEdit).bind(this.titleUniqueValidator)]],
       author: ['', Validators.required],
       date: ['', [Validators.required, this.dateValidatorDirective.validate]]
     });
@@ -57,11 +70,11 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
   }
 
   protected onModalDisplay(): void {
-    for (const controlName of Object.keys(bookFormFields)) {
+    for (const controlName of Object.keys(BookFormFields)) {
       // console.log('ControlName:', controlName, this.objToEdit);
-      if ( controlName === bookFormFields.date ) {
+      if ( controlName === BookFormFields.date ) {
         const dateString = this.formatDate(this.objToEdit.date);
-        console.log('setting the date value:', dateString);
+        // console.log('setting the date value:', dateString);
         this.bookForm.controls['date'].setValue(dateString);
       } else {
         this.bookForm.controls[controlName].setValue(this.objToEdit[controlName]);
@@ -100,11 +113,11 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
       return;
     }
 
-    const strDate: string = this.bookForm.controls[bookFormFields.date].value;
+    const strDate: string = this.bookForm.controls[BookFormFields.date].value;
 
-    const authorName = this.bookForm.controls[bookFormFields.author].value;
+    const authorName = this.bookForm.controls[BookFormFields.author].value;
     const publishYear = new Date( strDate );
-    const bookName = this.bookForm.controls[bookFormFields.title].value;
+    const bookName = this.bookForm.controls[BookFormFields.title].value;
 
 
 
@@ -115,9 +128,9 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
 
   }
   nullifyFormValue(): void {
-    // Itteranting over all the keys of bookFormFields
+    // Itteranting over all the keys of BookFormFields
     // (his own fields only, no inherited keys)
-    for ( const bookFormField of Object.keys(bookFormFields)) {
+    for ( const bookFormField of Object.keys(BookFormFields)) {
       this.bookForm.controls[bookFormField].reset();
     }
   }
@@ -140,6 +153,12 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
   }
   inputBlur(toolTip: any, elInput: Element): void {
     const formControlName  = elInput.getAttribute("formcontrolname");
+    // console.log('elInput:', this.bookForm.controls[this.titleFieldName].errors.duplicateTitle);
+    if ( formControlName === BookFormFields.title) {
+      if ( this.bookForm.controls[formControlName].errors && this.bookForm.controls[formControlName].errors.duplicateTitle ) {
+
+      }
+    }
     ( this.bookForm.controls[formControlName].invalid) ? toolTip.show() : toolTip.hide();
   }
 

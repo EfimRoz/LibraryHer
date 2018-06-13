@@ -15,6 +15,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TitleFormatPipe } from './pipes/title-format.pipe';
 import { ConfirmModalComponent } from './modals/confirm-modal/confirm-modal.component';
 import { ModalUserComponent } from './modals/modal-user/modal-user.component';
+import { TitleValidatorDirective } from './library/edit-modal/utilities/title-validator.directive';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ModalUserComponent } from './modals/modal-user/modal-user.component';
     ErrorModalComponent,
     TitleFormatPipe,
     ConfirmModalComponent,
-    ModalUserComponent
+    ModalUserComponent,
+    TitleValidatorDirective
   ],
   imports: [
     BrowserModule,

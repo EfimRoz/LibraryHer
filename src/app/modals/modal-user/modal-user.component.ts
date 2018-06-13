@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject} from 'rxjs';
 
-export enum ControllerAction {Display, Hide};
+export enum ControllerAction {Display, Hide, BadTitleError};
 
 
 @Component({

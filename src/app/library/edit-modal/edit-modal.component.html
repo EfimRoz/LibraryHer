@@ -13,7 +13,7 @@
         class="form-control"
         formControlName="title"
         type="text"
-        tooltip="No value is given"
+        [tooltip]="(bookForm.controls[titleFieldName].errors && bookForm.controls[titleFieldName].errors.duplicateTitle) ? 'Title already exists, pick another name' : 'No value is given'"
         placement="top"
         triggers=""
         #popName="bs-tooltip"
@@ -34,7 +34,7 @@
       >
       <input
         class="form-control"
-        dateValidator
+        appDateValidator
         formControlName="date"
         type="date"
         tooltip="Bad date, make sure all fields are numeric"

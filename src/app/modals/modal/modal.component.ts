@@ -40,7 +40,7 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
     this.modalChangeSubscriptions = [];
 
     this.controllerSub = controller.subscribe( (action: ControllerAction) => {
-      console.log('action to init:', action);
+      // console.log('action to init:', action);
       this.controllerInitAction(action);
     },
       err => console.error('An error occurred while receiving controller instructions'));
@@ -60,7 +60,7 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
     switch (action) {
       case ControllerAction.Display:
         this.modalPointer = this.modalService.show(this.modalRef);
-        console.log('this.modelRef :', this.modalRef);
+        // console.log('this.modelRef :', this.modalRef);
         // this.modalRef.show();
         break;
       case ControllerAction.Hide:
