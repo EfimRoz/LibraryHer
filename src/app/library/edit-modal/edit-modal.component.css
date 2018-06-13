@@ -19,8 +19,10 @@ input.ng-invalid.ng-touched {
   transform-origin: 50% 50%;
 }
 @keyframes animationFrames{
+  /* Blinking Animation of red border alerting user
+    About bad input    */
   0% {
-    border-color: rgba(255, 0, 0 ,1);    /*opacity:1;*/
+    border-color: rgba(255, 0, 0 ,1);
   }
   50% {
     border-color: rgba(255, 0, 0 ,0);

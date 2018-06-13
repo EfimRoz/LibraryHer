@@ -1,5 +1,3 @@
-
-
 export class Book {
 
   private _author: string;
@@ -14,17 +12,6 @@ export class Book {
     this._title = title;
   }
 
-  public clone(): Book {
-    return new Book(this.author, this.date, this.title);
-  }
-
-  public copy(book: Book): void {
-    this.author = book.author;
-    // console.log('book date:', book.date, 'this date:', this.date);
-    this.date = book.date;
-
-    this.title = book.title;
-  }
   get author(): string {
     return this._author;
   }
@@ -34,6 +21,8 @@ export class Book {
   }
 
   get date(): Date {
+    // Creating a new instance of Date object to avoid
+    // aliasing
     return ( this._date === null ) ? null : new Date(this._date);
   }
 
@@ -43,19 +32,21 @@ export class Book {
       this._date = null;
       return;
     }
-    // console.log('this date', this._date, "value.date", value);
+    // Changing the actual values
+    // instead of the whole pointer
+    // in order to have more responsive experience(Avoiding issues
+    // of Angular missing the change of pointer)
     const date = value.getDate();
     const month = value.getMonth();
     const fullYear = value.getFullYear();
 
-    if (this._date === null) {
+    if (this.date === null) {
       this._date = new Date();
     }
 
     this._date.setDate(date);
     this._date.setMonth(month);
     this._date.setFullYear(fullYear);
-
   }
 
   get title(): string {
@@ -64,6 +55,16 @@ export class Book {
 
   set title(value: string) {
     this._title = value;
+  }
+
+  public clone(): Book {
+    return new Book(this.author, this.date, this.title);
+  }
+
+  public copy(book: Book): void {
+    this.author = book.author;
+    this.date = book.date;
+    this.title = book.title;
   }
 
   public nullifyBook(): void {

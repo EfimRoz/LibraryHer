@@ -11,11 +11,11 @@ export class DateValidatorDirective implements Validator {
 
   validate(control: AbstractControl): ValidationErrors {
       const date = new Date(control.value);
-      // console.log('the date obj: ', date, ' the value: ', control.value);
       if (isNaN(date.getTime())) {
         return {'invalidDate': {value: control.value}};
       } else {
         return null;
       }
   }
+
 }

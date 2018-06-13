@@ -13,9 +13,9 @@
         class="form-control"
         formControlName="title"
         type="text"
-        [tooltip]="(bookForm.controls[titleFieldName].errors && bookForm.controls[titleFieldName].errors.duplicateTitle) ? 'Title already exists, pick another name' : 'No value is given'"
-        placement="top"
+        [tooltip]="titleToolTip"
         triggers=""
+        placement="top"
         #popName="bs-tooltip"
         #inputName
         (blur)="inputBlur(popName, inputName)"
@@ -26,11 +26,10 @@
         type="text"
         tooltip="No value is given"
         placement="top"
-        triggers=""
         #popAuthor="bs-tooltip"
         #inputAuthor
+        triggers=""
         (blur)="inputBlur(popAuthor, inputAuthor)"
-
       >
       <input
         class="form-control"

@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { LibraryComponent } from './library/library.component';
-import { BookComponentDirective } from './library/books-list/book/book-component.directive';
 import { EditModalComponent } from './library/edit-modal/edit-modal.component';
 import { BooksListComponent } from './library/books-list/books-list.component';
 import {HttpClientModule} from '@angular/common/http';
@@ -21,7 +20,6 @@ import { TitleValidatorDirective } from './library/edit-modal/utilities/title-va
   declarations: [
     AppComponent,
     LibraryComponent,
-    BookComponentDirective,
     EditModalComponent,
     BooksListComponent,
     DateValidatorDirective,

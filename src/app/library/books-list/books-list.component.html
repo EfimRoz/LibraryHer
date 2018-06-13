@@ -10,7 +10,7 @@
       <td>{{book.author | titleFormat}}</td>
       <td>{{book.title | titleFormat}}</td>
       <td>{{book.date | date: 'dd/MM/yyyy' }}</td>
-      <td><button class = "btn btn-info"> Read </button>
+      <td>
         <button
           class="btn btn-warning"
           (click)="updateBook(book)"

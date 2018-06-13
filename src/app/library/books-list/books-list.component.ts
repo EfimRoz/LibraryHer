@@ -1,6 +1,5 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Book} from './book/book.model';
-import {Subject} from 'rxjs';
 import {ControllerAction, ModalUserComponent} from '../../modals/modal-user/modal-user.component';
 import {ConfirmStatus} from '../../modals/confirm-modal/confirm-modal.component';
 
@@ -9,19 +8,15 @@ import {ConfirmStatus} from '../../modals/confirm-modal/confirm-modal.component'
   templateUrl: './books-list.component.html',
   styleUrls: ['./books-list.component.css']
 })
-export class BooksListComponent extends ModalUserComponent implements OnInit {
+export class BooksListComponent extends ModalUserComponent {
 
   @Input() booksList: Book[];
   @Output() bookUpdated = new EventEmitter<Book>();
   @Output() bookDeleted = new EventEmitter<Book>();
   @Output() emitConfirmStatus = new EventEmitter<ConfirmStatus>();
 
-
   constructor() {
     super();
-  }
-
-  ngOnInit() {
   }
 
   updateBook(book: Book): void {
