@@ -120,7 +120,6 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
     // Itteranting over all the keys of bookFormFields
     // (his own fields only, no inherited keys)
     for ( const bookFormField of Object.keys(bookFormFields)) {
-      console.log('nullifiying', bookFormField);
       this.objToEdit[bookFormField] = null;
       this.bookForm.controls[bookFormField].reset();
     }

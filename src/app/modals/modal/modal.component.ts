@@ -9,11 +9,9 @@ import {ControllerAction} from '../../library/edit-modal/utilities/controller.se
 })
 export abstract class ModalComponent implements AfterViewInit, OnDestroy {
 
-  private modalChangeSubscription: Subscription;
+  private modalChangeSubscriptions: Subscription[];
 
   @ViewChild('modalRef') protected modalRef: TemplateRef<ModalComponent>;
-  @ViewChild(ModalDirective) modal: ModalDirective;
-  // @ViewChild('modal') protected modalRef: TemplateRef<ModalComponent>;
   @Output() afterViewInit = new EventEmitter <Subject<ControllerAction>>();
 
   private controllerSub: Subscription;
@@ -38,6 +36,9 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
     return controller;
   }
   protected subscribeUpdates(controller: Subject<ControllerAction>): void {
+
+    this.modalChangeSubscriptions = [];
+
     this.controllerSub = controller.subscribe( (action: ControllerAction) => {
       console.log('action to init:', action);
       this.controllerInitAction(action);
@@ -45,12 +46,14 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
       err => console.error('An error occurred while receiving controller instructions'));
 
 
-    this.modalChangeSubscription = this.modalService.onHidden.subscribe( reason => this.onHidden(reason));
+    const onHiddenSub: Subscription = this.modalService.onHidden.subscribe( reason => this.onHidden(reason));
+    const onShownSub: Subscription = this.modalService.onShow.subscribe( reason => this.onModalDisplay(reason))
+    this.modalChangeSubscriptions.push(onHiddenSub, onShownSub);
   }
 
   protected unsubscribeUpdates(): void {
     this.controllerSub.unsubscribe();
-    this.modalChangeSubscription.unsubscribe();
+    this.modalChangeSubscriptions.forEach( subscription => subscription.unsubscribe() );
   }
 
   protected controllerInitAction(action: ControllerAction): void {
@@ -59,7 +62,6 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
         this.modalPointer = this.modalService.show(this.modalRef);
         console.log('this.modelRef :', this.modalRef);
         // this.modalRef.show();
-        this.onModalDisplay();
         break;
       case ControllerAction.Hide:
         this.modalPointer.hide();
@@ -67,9 +69,9 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  protected onHidden(reason: any): void {
+  protected onHidden(reason: string): void {
   }
-  protected onModalDisplay(): void {
+  protected onModalDisplay(reason: string): void {
 
   }
 
