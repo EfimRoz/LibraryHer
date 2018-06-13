@@ -11,13 +11,14 @@
   <app-books-list
     [booksList]="booksList"
     (bookUpdated)="onBookUpdate($event)"
+    (bookDeleted)="onBookDelete($event)"
   ></app-books-list>
 </section>
 <app-edit-modal
   [objToEdit]="editBook"
   (afterViewInit)="storeController($event)"
   (modalInputReceived)="onModalInputReceived($event)"
-  (onHidden)="onHidden($event)"
+  (nullifyObjToEdit)="editBook.nullifyBook()"
 
 ></app-edit-modal>
 <!--<app-error-modal (afterViewInit)="storeController($event)"></app-error-modal>-->

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
+import {ControllerAction} from '../../../modals/modal-user/modal-user.component';
 
-export enum ControllerAction {Display, Hide};
 
 @Injectable({
   providedIn: 'root'

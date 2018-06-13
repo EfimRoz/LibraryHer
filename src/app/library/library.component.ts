@@ -2,19 +2,18 @@ import {Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild} from '
 import {Book} from './books-list/book/book.model';
 import {BookService} from './service/book.service';
 import {Subject, Subscription} from 'rxjs';
-import {ControllerAction, ControllerService} from './edit-modal/utilities/controller.service';
 import {ModalDirective} from 'ngx-bootstrap';
+import {ControllerAction, ModalUserComponent} from '../modals/modal-user/modal-user.component';
 
 @Component({
   selector: 'app-library',
   templateUrl: './library.component.html',
   styleUrls: ['./library.component.css']
 })
-export class LibraryComponent implements OnInit, OnDestroy {
+export class LibraryComponent extends ModalUserComponent implements OnInit, OnDestroy {
 
   private booksList: Book[];
   private updatesSubscription: Subscription;
-  private modalController: Subject<ControllerAction>;
   editBook: Book;
   private inputDate: Date;
   // @ViewChild('modal') modalRef: any;
@@ -27,6 +26,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.updatesUnsubscribe();
   }
   constructor( private bookService: BookService ) {
+    super();
     this.initNewBook();
   }
 
@@ -42,15 +42,11 @@ export class LibraryComponent implements OnInit, OnDestroy {
   }
   initNewBook(): void {
     this.editBook = new Book(null, null, null);
-    console.log('new book date:2', this.editBook.date);
   }
   updatesSubscribe(): void {
     this.updatesSubscription = this.bookService.booksListUpdate.subscribe( booksList => {
       this.booksList = booksList;
     });
-  }
-  storeController(modalController: Subject<ControllerAction>): void {
-    this.modalController = modalController;
   }
 
   onModalInputReceived(book: Book): void {
@@ -68,12 +64,14 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
     this.initControllerAction(ControllerAction.Display);
   }
+
+  onBookDelete(book: Book): void {
+    this.bookService.deleteBook(book);
+  }
   // onHidden(event: ModalDirective): void {
   //   console.log('YAY!!!!!!!:', event)
   // }
-  initControllerAction(controllerAction: ControllerAction): void {
-    this.modalController.next(controllerAction);
-  }
+
   updatesUnsubscribe(): void {
     this.updatesSubscription.unsubscribe();
   }

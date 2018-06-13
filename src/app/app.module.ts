@@ -13,6 +13,8 @@ import { DateValidatorDirective } from './library/edit-modal/utilities/form-vali
 import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TitleFormatPipe } from './pipes/title-format.pipe';
+import { ConfirmModalComponent } from './modals/confirm-modal/confirm-modal.component';
+import { ModalUserComponent } from './modals/modal-user/modal-user.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { TitleFormatPipe } from './pipes/title-format.pipe';
     BooksListComponent,
     DateValidatorDirective,
     ErrorModalComponent,
-    TitleFormatPipe
+    TitleFormatPipe,
+    ConfirmModalComponent,
+    ModalUserComponent
   ],
   imports: [
     BrowserModule,

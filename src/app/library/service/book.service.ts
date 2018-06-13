@@ -47,8 +47,16 @@ export class BookService {
   }
 
   public addNewBook( newBook: Book ): void {
-    const copyNewBook = newBook.clone();
+    const copyNewBook: Book = newBook.clone();
     this.realBooksList.push(copyNewBook);
+    this.updateBookList();
+  }
+
+  public deleteBook( bookToDel: Book ): void {
+    const delIndex = this.realBooksList.findIndex( book => book.title === bookToDel.title);
+    this.realBooksList.splice(delIndex, 1);
+    console.log('deleting the book:', this.realBooksList);
+
     this.updateBookList();
   }
 

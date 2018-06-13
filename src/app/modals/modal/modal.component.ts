@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {BsModalService, ModalDirective} from 'ngx-bootstrap';
 import {Subject, Subscription} from 'rxjs';
-import {ControllerAction} from '../../library/edit-modal/utilities/controller.service';
+import {ControllerAction} from '../modal-user/modal-user.component';
 
 @Component({
   selector: 'app-modal',

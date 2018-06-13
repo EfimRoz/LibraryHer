@@ -15,8 +15,14 @@
           class="btn btn-warning"
           (click)="updateBook(book)"
         > Update </button>
-        <button class = "btn btn-danger"> Delete </button>
+        <button
+          class="btn btn-danger"
+          (click)="deleteBook(book)"
+        > Delete </button>
       </td>
     </tr>
   </table>
+<app-confirm-modal
+  (afterViewInit)="storeController($event)"
+></app-confirm-modal>
 </section>

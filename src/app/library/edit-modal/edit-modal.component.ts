@@ -3,13 +3,14 @@ import {
   OnDestroy,
   OnInit, Output, TemplateRef, ViewChild,
 } from '@angular/core';
-import {ControllerAction, ControllerService} from './utilities/controller.service';
+import {ControllerService} from './utilities/controller.service';
 import {BsModalService, ModalDirective} from 'ngx-bootstrap';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DateValidatorDirective} from './utilities/form-validators.directive';
 import {ModalComponent} from '../../modals/modal/modal.component';
 import {Book, bookFormFields} from '../books-list/book/book.model';
 import {Subscription} from 'rxjs';
+import {ControllerAction} from '../../modals/modal-user/modal-user.component';
 
 
 
@@ -28,6 +29,7 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
   // @ViewChild('modal') protected modalRef: TemplateRef<ModalComponent>;
   @Input() objToEdit: Book;
   @Output() modalInputReceived = new EventEmitter<Book>();
+  @Output() nullifyObjToEdit = new EventEmitter();
 
   private bookForm: FormGroup;
   constructor( private controllerService: ControllerService,
@@ -112,18 +114,18 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
     // this.nullifyFormValue();
 
   }
-  protected onHidden(reason: any): void {
-    this.nullifyFormValue();
-  }
-
   nullifyFormValue(): void {
     // Itteranting over all the keys of bookFormFields
     // (his own fields only, no inherited keys)
     for ( const bookFormField of Object.keys(bookFormFields)) {
-      this.objToEdit[bookFormField] = null;
       this.bookForm.controls[bookFormField].reset();
     }
   }
+  protected onHidden(reason: any): void {
+    this.nullifyObjToEdit.emit();
+    this.nullifyFormValue();
+  }
+
 
   touchFormInputs(...inputs: HTMLElement[]): void {
     const inputElements = [ ...inputs];
