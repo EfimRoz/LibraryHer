@@ -12,6 +12,7 @@
     [booksList]="booksList"
     (bookUpdated)="onBookUpdate($event)"
     (bookDeleted)="onBookDelete($event)"
+    (emitConfirmStatus)="emitConfirmStatus($event)"
   ></app-books-list>
 </section>
 <app-edit-modal

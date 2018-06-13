@@ -121,7 +121,7 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
       this.bookForm.controls[bookFormField].reset();
     }
   }
-  protected onHidden(reason: any): void {
+  protected onModalHidden(reason: any): void {
     this.nullifyObjToEdit.emit();
     this.nullifyFormValue();
   }

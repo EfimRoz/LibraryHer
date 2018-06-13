@@ -3,14 +3,9 @@
   #modalRef
   let-c="close"
   let-d="dismiss">
-  <div class="modal-header modal-section">
-    <p>Experimental</p>
-  </div>
-  <div class="modal-body modal-section">
-    <p>Experimental2222</p>
-  </div>
-  <div class="modal-footer modal-section">
-    <!--<ng-content></ng-content>-->
-    Test
+  <div class="modal-body text-center">
+    <p>Do you want to confirm?</p>
+    <button type="button" class="btn btn-default" (click)="confirm()" >Yes</button>
+    <button type="button" class="btn btn-primary" (click)="decline()" >No</button>
   </div>
 </ng-template>

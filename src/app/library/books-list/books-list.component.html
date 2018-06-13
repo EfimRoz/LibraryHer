@@ -24,5 +24,6 @@
   </table>
 <app-confirm-modal
   (afterViewInit)="storeController($event)"
+  (confirmStatus)="emitConfirmStatus.emit($event)"
 ></app-confirm-modal>
 </section>

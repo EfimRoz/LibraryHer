@@ -1,6 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ModalComponent} from '../modal/modal.component';
 import {BsModalService} from 'ngx-bootstrap';
+import {ControllerAction} from '../modal-user/modal-user.component';
+
+export enum ConfirmStatus {
+  Cancel,
+  Fail,
+  Success
+}
 
 @Component({
   selector: 'app-confirm-modal',
@@ -9,6 +16,8 @@ import {BsModalService} from 'ngx-bootstrap';
 })
 export class ConfirmModalComponent extends ModalComponent implements OnInit {
 
+  @Output() confirmStatus = new EventEmitter<ConfirmStatus>();
+
   constructor(protected modalService: BsModalService) {
     super(modalService);
   }
@@ -16,4 +25,21 @@ export class ConfirmModalComponent extends ModalComponent implements OnInit {
   ngOnInit() {
   }
 
+  confirm(): void {
+    console.log('confirmed');
+    this.emitConfirmStatus( ConfirmStatus.Success );
+  }
+
+  decline(): void {
+    this.emitConfirmStatus( ConfirmStatus.Fail );
+  }
+  onModalHidden(): void {
+    this.emitConfirmStatus( ConfirmStatus.Fail );
+  }
+  private emitConfirmStatus( confirmStatus: ConfirmStatus): void {
+    this.confirmStatus.emit(confirmStatus);
+    super.controllerInitAction( ControllerAction.Hide);
+  }
+
 }
+

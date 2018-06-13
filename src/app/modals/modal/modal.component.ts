@@ -46,7 +46,7 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
       err => console.error('An error occurred while receiving controller instructions'));
 
 
-    const onHiddenSub: Subscription = this.modalService.onHidden.subscribe( reason => this.onHidden(reason));
+    const onHiddenSub: Subscription = this.modalService.onHidden.subscribe( reason => this.onModalHidden(reason));
     const onShownSub: Subscription = this.modalService.onShow.subscribe( reason => this.onModalDisplay(reason))
     this.modalChangeSubscriptions.push(onHiddenSub, onShownSub);
   }
@@ -69,7 +69,7 @@ export abstract class ModalComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  protected onHidden(reason: string): void {
+  protected onModalHidden(reason: string): void {
   }
   protected onModalDisplay(reason: string): void {
 

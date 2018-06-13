@@ -1,9 +1,9 @@
-import {Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {Book} from './books-list/book/book.model';
 import {BookService} from './service/book.service';
 import {Subject, Subscription} from 'rxjs';
-import {ModalDirective} from 'ngx-bootstrap';
 import {ControllerAction, ModalUserComponent} from '../modals/modal-user/modal-user.component';
+import {ConfirmStatus} from '../modals/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-library',
@@ -66,7 +66,21 @@ export class LibraryComponent extends ModalUserComponent implements OnInit, OnDe
   }
 
   onBookDelete(book: Book): void {
-    this.bookService.deleteBook(book);
+    this.editBook = book.clone();
+  }
+
+  emitConfirmStatus(confirmStatus: ConfirmStatus) {
+    switch (confirmStatus) {
+      case ConfirmStatus.Success:
+        this.bookService.deleteBook(this.editBook);
+        break;
+      case ConfirmStatus.Fail:
+        break;
+
+      case ConfirmStatus.Cancel:
+        break;
+    }
+    this.initNewBook();
   }
   // onHidden(event: ModalDirective): void {
   //   console.log('YAY!!!!!!!:', event)
