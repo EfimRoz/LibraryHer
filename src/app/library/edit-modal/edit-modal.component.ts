@@ -1,7 +1,8 @@
 import {
   Component, EventEmitter, Input,
   OnDestroy,
-  OnInit, Output, } from '@angular/core';
+  OnInit, Output, TemplateRef,
+} from '@angular/core';
 import {BsModalService, TooltipDirective} from 'ngx-bootstrap';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DateValidatorDirective} from './utilities/form-validators.directive';
@@ -9,6 +10,7 @@ import {ModalComponent} from '../../modals/modal/modal.component';
 import {Book} from '../books-list/book/book.model';
 import {ControllerAction} from '../../modals/modal-user/modal-user.component';
 import {TitleValidatorDirective} from './utilities/title-validator.directive';
+import {Subscription} from 'rxjs';
 
 export enum BookFormFields {
   title = 'title',
@@ -30,16 +32,11 @@ export enum titleWarnings {
 
 export class EditModalComponent extends ModalComponent implements OnInit, OnDestroy {
 
-  // @ViewChild(TooltipDirective) popName: ElementRef;
   @Input() objToEdit: Book;
   @Output() modalInputReceived = new EventEmitter<Book>();
   @Output() nullifyObjToEdit = new EventEmitter();
 
   private bookForm: FormGroup;
-
-  private titleToolTip = '';
-  // private readonly activeToolTips: Subscription[];
-
 
   constructor(
                 protected modalService: BsModalService,
@@ -47,9 +44,6 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
                 private titleUniqueValidator: TitleValidatorDirective,
                 private formBuilder: FormBuilder) {
     super(modalService);
-    // this.titleFieldName = BookFormFields.title;
-    this.titleToolTip = titleWarnings.warningEmptyField;
-    // this.activeToolTips = [];
   }
 
   ngOnInit() {
@@ -71,19 +65,20 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
 
   protected onModalDisplay(): void {
     for (const controlName of Object.keys(BookFormFields)) {
-      // console.log('ControlName:', controlName, this.objToEdit);
+
       if ( controlName === BookFormFields.date ) {
         const dateString = this.formatDate(this.objToEdit.date);
-        // console.log('setting the date value:', dateString);
         this.bookForm.controls['date'].setValue(dateString);
+
       } else {
         this.bookForm.controls[controlName].setValue(this.objToEdit[controlName]);
       }
-      // console.log('Control:', this.bookForm.controls[controlName], 'new value:', this.objToEdit[controlName]);
     }
   }
 
   private formatDate(date: Date): string {
+    // Creating special format string
+    // For the HTML date picker.
     let year: string;
     let month: string;
     let dayOfMonth: string;
@@ -92,6 +87,8 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
       month = `${this.objToEdit.date.getMonth() + 1}`;
       dayOfMonth = `${this.objToEdit.date.getDate()}`;
       if ( month.length < 2 ) {
+        // Adding 0 before single digit
+        // For better experience
         month = `0${month}`;
       }
       if ( dayOfMonth.length < 2 ) {
@@ -99,9 +96,13 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
       }
     }
     if ( year && month && year ) {
+      // The format I was able to work with:
+      // yyyy-MM-dd
       const dateString = `${year}-${month}-${dayOfMonth}`;
       return dateString;
     }
+    // No date? send an empty string to
+    // display empty date picker
     return '';
     }
 
@@ -119,14 +120,11 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
     const publishYear = new Date( strDate );
     const bookName = this.bookForm.controls[BookFormFields.title].value;
 
-
-
     const newBook = new Book(authorName, publishYear, bookName);
 
     this.modalInputReceived.emit(newBook);
-    // this.nullifyFormValue();
-
   }
+
   nullifyFormValue(): void {
     // Itteranting over all the keys of BookFormFields
     // (his own fields only, no inherited keys)
@@ -134,6 +132,7 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
       this.bookForm.controls[bookFormField].reset();
     }
   }
+
   protected onModalHidden(reason: any): void {
     this.nullifyObjToEdit.emit();
     this.nullifyFormValue();
@@ -148,40 +147,45 @@ export class EditModalComponent extends ModalComponent implements OnInit, OnDest
       element.blur();
     });
   }
+
   cancel(): void {
     super.controllerInitAction( ControllerAction.Hide);
   }
+
   inputBlur(toolTip: TooltipDirective, elInput: Element): void {
+
     const formControlName  = elInput.getAttribute('formcontrolname');
     let titleToolTip: string;
+
     if ( formControlName === BookFormFields.title) {
       const errors = this.bookForm.controls[BookFormFields.title].errors;
-      if ( errors ) {
-        if (errors.duplicateTitle ) {
-          titleToolTip = titleWarnings.warningExistingTitle;
-        } else if ( errors.required) {
-          titleToolTip = titleWarnings.warningEmptyField;
+      if (errors) {
+        console.log('errors:', errors);
+        for ( const error of Object.keys(errors) ) {
+          switch (error) {
+            case 'duplicateTitle':
+              console.log( this.bookForm.controls[BookFormFields.title]);
+              titleToolTip = titleWarnings.warningExistingTitle;
+              break;
+            case 'required':
+              titleToolTip = titleWarnings.warningEmptyField;
+              break;
+          }
+          toolTip.tooltip = titleToolTip;
         }
       }
-      toolTip.tooltip = titleToolTip;
     }
+
     if ( this.bookForm.controls[formControlName].invalid) {
-      const observable: EventEmitter = toolTip.tooltipChange;
-      const sub = observable.subscribe(change => {
+      const observable: EventEmitter<string | TemplateRef<any>> = toolTip.tooltipChange;
+      const sub: Subscription = observable.subscribe(() => {
         toolTip.show();
+        sub.unsubscribe();
       }, err => console.error('Crashed while waiting for change in the forms:', err));
 
-      // observable.next(this.titleToolTip);
-
-      console.log('before observable', observable, 'after:', toolTip.tooltipChange);
-      // this.activeToolTips.push(sub);
-      console.log('showing Tool Tip');
       toolTip.show();
     } else {
       toolTip.hide();
     }
-
-
   }
-
 }

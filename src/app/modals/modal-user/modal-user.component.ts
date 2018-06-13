@@ -1,18 +1,17 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject} from 'rxjs';
 
-export enum ControllerAction {Display, Hide, BadTitleError};
+export enum ControllerAction {Display, Hide, BadTitleError}
 
 
 @Component({
   selector: 'app-modal-user',
-  templateUrl: './modal-user.component.html',
-  styleUrls: ['./modal-user.component.css']
 })
 export class ModalUserComponent implements OnInit, OnDestroy {
+  // The basic boiler-plate for all the components that want to interact
+  // With Modals. Handles all the basics.
 
   private modalController: Subject<ControllerAction>;
-
 
   constructor() { }
 

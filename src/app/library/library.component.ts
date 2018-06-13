@@ -1,7 +1,7 @@
-import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, } from '@angular/core';
 import {Book} from './books-list/book/book.model';
 import {BookService} from './service/book.service';
-import {Subject, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {ControllerAction, ModalUserComponent} from '../modals/modal-user/modal-user.component';
 import {ConfirmStatus} from '../modals/confirm-modal/confirm-modal.component';
 
@@ -14,9 +14,7 @@ export class LibraryComponent extends ModalUserComponent implements OnInit, OnDe
 
   private booksList: Book[];
   private updatesSubscription: Subscription;
-  editBook: Book = new Book(null, null, null);
-  private inputDate: Date;
-  // @ViewChild('modal') modalRef: any;
+  editBook: Book;
 
   ngOnInit() {
     this.getBooksList();
@@ -33,16 +31,17 @@ export class LibraryComponent extends ModalUserComponent implements OnInit, OnDe
   getBooksList(): void {
     this.bookService.requestBooksList().subscribe( (booksList: Book[]) => {
       this.booksList = booksList;
-      // console.log('managed to get booksList');
     });
   }
 
-  addNewBook(): void {
+  initAddNewBook(): void {
     this.initControllerAction(ControllerAction.Display);
   }
+
   initNewBook(): void {
     this.editBook = new Book(null, null, null);
   }
+
   updatesSubscribe(): void {
     this.updatesSubscription = this.bookService.booksListUpdate.subscribe( booksList => {
       this.booksList = booksList;
@@ -51,27 +50,27 @@ export class LibraryComponent extends ModalUserComponent implements OnInit, OnDe
 
   onModalInputReceived(book: Book): void {
     // Where you receive answer from the edit modal
-    try {
-      this.bookService.addNewBook(book, this.editBook);
-      this.initControllerAction(ControllerAction.Hide);
-    } catch (e) {
+    // (A new book or an edited one which should be replaced)
+    if (this.bookService.titleExists(book.title)) {
       // Bad name
       this.initControllerAction(ControllerAction.BadTitleError);
+    } else {
+      this.bookService.addNewBook(book, this.editBook);
+      this.initControllerAction(ControllerAction.Hide);
     }
 
   }
 
   onBookUpdate(book: Book): void {
-    // console.log('book update!', book);
-
     this.editBook.copy(book);
-
-    // console.log('book update2', this.editBook);
-
     this.initControllerAction(ControllerAction.Display);
   }
 
-  onBookDelete(book: Book): void {
+  bookDeleteRequest(book: Book): void {
+    // Marking the book for deletion,
+    // once the user interacts with the
+    // modal, emitConfirmStatus should take
+    // care of all that left
     this.editBook = book.clone();
   }
 
@@ -83,13 +82,10 @@ export class LibraryComponent extends ModalUserComponent implements OnInit, OnDe
       case ConfirmStatus.Fail:
         break;
     }
-    // this.initNewBook();
   }
-  // onHidden(event: ModalDirective): void {
-  //   console.log('YAY!!!!!!!:', event)
-  // }
 
   updatesUnsubscribe(): void {
     this.updatesSubscription.unsubscribe();
   }
+
 }

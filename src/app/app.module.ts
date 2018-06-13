@@ -9,7 +9,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {ModalModule} from 'ngx-bootstrap';
 import {ReactiveFormsModule} from '@angular/forms';
 import { DateValidatorDirective } from './library/edit-modal/utilities/form-validators.directive';
-import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TitleFormatPipe } from './pipes/title-format.pipe';
 import { ConfirmModalComponent } from './modals/confirm-modal/confirm-modal.component';
@@ -23,7 +22,6 @@ import { TitleValidatorDirective } from './library/edit-modal/utilities/title-va
     EditModalComponent,
     BooksListComponent,
     DateValidatorDirective,
-    ErrorModalComponent,
     TitleFormatPipe,
     ConfirmModalComponent,
     ModalUserComponent,

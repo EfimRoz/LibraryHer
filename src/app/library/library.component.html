@@ -3,7 +3,7 @@
 </header>
 <section>
   <button
-    (click)="addNewBook()"
+    (click)="initAddNewBook()"
     class = "btn btn-link"
   >
     Add New Book
@@ -11,7 +11,7 @@
   <app-books-list
     [booksList]="booksList"
     (bookUpdated)="onBookUpdate($event)"
-    (bookDeleted)="onBookDelete($event)"
+    (bookDeleted)="bookDeleteRequest($event)"
     (emitConfirmStatus)="emitConfirmStatus($event)"
   ></app-books-list>
 </section>

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {ModalComponent} from '../modal/modal.component';
 import {BsModalService} from 'ngx-bootstrap';
 import {ControllerAction} from '../modal-user/modal-user.component';
@@ -13,7 +13,7 @@ export enum ConfirmStatus {
   templateUrl: './confirm-modal.component.html',
   styleUrls: ['./confirm-modal.component.css']
 })
-export class ConfirmModalComponent extends ModalComponent implements OnInit {
+export class ConfirmModalComponent extends ModalComponent {
 
   @Output() confirmStatus = new EventEmitter<ConfirmStatus>();
 
@@ -21,16 +21,11 @@ export class ConfirmModalComponent extends ModalComponent implements OnInit {
     super(modalService);
   }
 
-  ngOnInit() {
-  }
-
   confirm(): void {
-
     this.emitConfirmStatus( ConfirmStatus.Success );
   }
 
   decline(): void {
-
     this.emitConfirmStatus( ConfirmStatus.Fail );
   }
 
